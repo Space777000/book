@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <title>書籍検索システム</title>
+</head>
+<body>
+    <nav class="navbar navber-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a href="/" class="navbar-brand">書籍検索</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="my-2 bg-dark">
+        <p class="m-0 text-center text-white">Copyrigth &copy; Space777000</p>
+    </footer>
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+</html>

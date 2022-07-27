@@ -7,8 +7,9 @@ import requests
 SEARCH_URL = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=1062142832431956401'
 
 def get_api_data(params):
-    api = requests.get(SEARCH_URL, params=params).text
-    result = json.loads(api)
+    api = requests.get(SEARCH_URL, params=params)
+    #print(api.status_code)
+    result = json.loads(api.text)
     #items = result['Items']
     return result
 
@@ -44,9 +45,10 @@ class IndexView(View):
                     'isbn': isbn,
                 }
                 book_data.append(query)
-                page = result['page']       ## 現在のページ
-                count = result['count']     ## 検索総数
-                pageCount = result['pageCount']  ## 総ページ数
+                
+            page = result['page']       ## 現在のページ
+            count = result['count']     ## 検索総数
+            pageCount = result['pageCount']  ## 総ページ数
                 
             return render(request, 'app/book.html', {
                 'book_data': book_data,

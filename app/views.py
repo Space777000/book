@@ -9,8 +9,8 @@ SEARCH_URL = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?f
 def get_api_data(params):
     api = requests.get(SEARCH_URL, params=params).text
     result = json.loads(api)
-    items = result['Items']
-    return items
+    #items = result['Items']
+    return result
 
 
 class IndexView(View):
@@ -30,7 +30,8 @@ class IndexView(View):
                 'title': keyword,
                 'hits': 28,
             }
-            items = get_api_data(params)
+            result = get_api_data(params)
+            items = result['Items']
             book_data = []
             for i in items:
                 item = i['Item']
@@ -43,10 +44,16 @@ class IndexView(View):
                     'isbn': isbn,
                 }
                 book_data.append(query)
+                page = result['page']       ## 現在のページ
+                count = result['count']     ## 検索総数
+                pageCount = result['pageCount']  ## 総ページ数
                 
             return render(request, 'app/book.html', {
                 'book_data': book_data,
                 'keyword': keyword,
+                'page': page,
+                'count': count,
+                'pageCount': pageCount,
             })
             
         return  render(request, 'app/index.html', {
@@ -60,7 +67,8 @@ class DetailView(View):
             'isbn': isbn
         }
         
-        items = get_api_data(params)
+        result = get_api_data(params)
+        items = result['Items']
         items = items[0]
         item = items['Item']
         title = item['title']

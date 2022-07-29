@@ -4,7 +4,7 @@
 
 <div class="text-center my-5">
     <div class="mb-5">
-        <h3>「{{ keyword }}」の検索結果  総数{{ count }}件({{ page }}/{{ pageCount }}page)</h3>
+        <h3>「{{ keyword }}」の検索結果  総数{{ count }}件のうち{{ pstart }}-{{ pend }}件</h3>
     </div>
     <div class="row">
         {% for book in book_data %}
@@ -21,7 +21,37 @@
             <p>該当する者はありません</p>
         {% endfor %}
     </div>
+
 </div>
+
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+    {% if page == 1 %}
+        <li><a class="page-link text-primary d-inline-block" href="#"><<</a></li>
+    {% else %}
+        <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#"><<</div></li>
+    {% endif %}
+
+    {% for page_num in for_range %}
+        {% if page %}
+            {% if page_num == page %}
+                <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#">{{ page_num }}</div></li>
+            {% else %}
+                <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page_num keyword %}">{{ page_num }}</a></li>
+            {% endif %}
+        {% else %}
+            <li class="disabled"><a class="page-link text-secondary d-inline-block text-muted" href="#">・・・</a></li>
+        {% endif %}  
+    {% endfor %}
+
+    {% if page %}
+        <li><a class="page-link text-primary d-inline-block" href="#">>></a></li>
+    {% else %}
+        <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#">>></div></li>
+    {% endif %}
+
+    </ul>
+</nav>
 
 
 {% endblock %}

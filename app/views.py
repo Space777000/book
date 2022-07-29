@@ -49,13 +49,18 @@ class IndexView(View):
             page = result['page']       ## 現在のページ
             count = result['count']     ## 検索総数
             pageCount = result['pageCount']  ## 総ページ数
-                
+            pstart = (page-1)*28+1
+            pend = (page*28)
+            for_range = [i for i in range(1,pageCount+1)]    
             return render(request, 'app/book.html', {
                 'book_data': book_data,
                 'keyword': keyword,
                 'page': page,
                 'count': count,
                 'pageCount': pageCount,
+                'pstart': pstart,
+                'pend': pend,
+                'for_range':for_range,
             })
             
         return  render(request, 'app/index.html', {
@@ -106,4 +111,46 @@ class DetailView(View):
             'book_data': book_data
         })
         
-        
+class BooksView(View):
+    def get(self, request, *args, **kwargs):
+        page_num = self.kwargs['page_num']
+        keyword = self.kwargs['keyword']
+        params = {
+            'title': keyword,
+            'hits': 28,
+            'page': page_num,
+        }
+        result = get_api_data(params)
+        items = result['Items']
+        book_data = []
+        for i in items:
+            item = i['Item']
+            title = item['title']
+            image = item['largeImageUrl']
+            isbn = item['isbn']
+            query = {
+                'title': title,
+                'image': image,
+                'isbn': isbn,
+            }
+            book_data.append(query)
+                
+        page = result['page']       ## 現在のページ
+        count = result['count']     ## 検索総数
+        pageCount = result['pageCount']  ## 総ページ数
+        pstart = (page-1)*28+1
+        pend = (page*28)
+        for_range = [i for i in range(1,pageCount+1)]
+
+            
+        return render(request, 'app/book.html', {
+            'book_data': book_data,
+            'keyword': keyword,
+            'page': page,
+            'count': count,
+            'pageCount': pageCount,
+            'pstart': pstart,
+            'pend': pend,
+            'for_range':for_range,
+        })
+                        

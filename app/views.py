@@ -5,8 +5,11 @@ import json
 import requests
 import os
 
-applicationId = os.environ['applicationId']
-SEARCH_URL = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=applicationId'
+
+appid = os.getenv('appid')
+SEARCH_URL = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=' + appid
+
+
 
 def get_api_data(params):
     api = requests.get(SEARCH_URL, params=params)

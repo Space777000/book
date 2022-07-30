@@ -3,8 +3,10 @@ from django.views.generic import View
 from .forms import SearchForm
 import json
 import requests
+import os
 
-SEARCH_URL = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=1062142832431956401'
+applicationId = os.environ['applicationId']
+SEARCH_URL = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&applicationId=applicationId'
 
 def get_api_data(params):
     api = requests.get(SEARCH_URL, params=params)

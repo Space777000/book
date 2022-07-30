@@ -4,7 +4,8 @@
 
 <div class="text-center my-5">
     <div class="mb-5">
-        <h3>「{{ keyword }}」の検索結果  総数{{ count }}件のうち{{ pstart }}-{{ pend }}件</h3>
+        <h3>「{{ keyword }}」の検索結果</h3>
+        <small>  {{ count_one_s }}件～{{ count_one_e }}件(全 {{ count }}件)</small>
     </div>
     <div class="row">
         {% for book in book_data %}
@@ -26,28 +27,50 @@
 
 <nav aria-label="Page navigation example">
     <ul class="pagination">
-    {% if page == 1 %}
-        <li><a class="page-link text-primary d-inline-block" href="#"><<</a></li>
+    {% if page != 1 %}
+        <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page|add:'-1' keyword %}"><<</a></li>
     {% else %}
         <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#"><<</div></li>
     {% endif %}
-
-    {% for page_num in for_range %}
-        {% if page %}
+    {% if pageCount < 6 %}
+        {% for page_num in for_range %}
             {% if page_num == page %}
                 <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#">{{ page_num }}</div></li>
             {% else %}
                 <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page_num keyword %}">{{ page_num }}</a></li>
             {% endif %}
-        {% else %}
-            <li class="disabled"><a class="page-link text-secondary d-inline-block text-muted" href="#">・・・</a></li>
-        {% endif %}  
-    {% endfor %}
-
-    {% if page %}
-        <li><a class="page-link text-primary d-inline-block" href="#">>></a></li>
+        {% endfor %}
     {% else %}
-        <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#">>></div></li>
+        {% if page >= 5 %}
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' 1 keyword %}">1</a></li>
+            <li>…</li>
+        {% elif page == 4 %}
+        <li><a class="page-link text-primary d-inline-block" href="{% url 'books' 1 keyword %}">1</a></li>
+        {% endif %}
+        {% if page > 2 %}
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page|add:'-2' keyword %}">{{ page|add:'-2' }}</a></li>  
+        {% endif %}
+        {% if page > 1 %}                  
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page|add:'-1' keyword %}">{{ page|add:'-1' }}</a></li>
+        {% endif %}
+        <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="#">{{ page }}</div></li>
+        {% if endnowpage >= 1 %}
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page|add:'1' keyword %}">{{ page|add:'1' }}</a></li>
+        {% endif %}
+        {% if endnowpage >= 2  %}
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page|add:'2' keyword %}">{{ page|add:'2' }}</a></li>
+        {% endif %}                
+        {% if endnowpage == 3 %}
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' pageCount keyword %}">{{ pageCount }}</a></li>
+        {% elif endnowpage >= 4 %}
+            <li>…</li>
+            <li><a class="page-link text-primary d-inline-block" href="{% url 'books' pageCount keyword %}">{{ pageCount }}</a></li>
+        {% endif %}
+    {% endif %}
+    {% if page != pageCount %}
+        <li><a class="page-link text-primary d-inline-block" href="{% url 'books' page|add:'1' keyword %}">>></a></li>
+    {% else %}
+        <li class="disabled"><div class="page-link text-secondary d-inline-block disabled" href="">>></div></li>
     {% endif %}
 
     </ul>

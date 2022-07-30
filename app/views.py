@@ -45,22 +45,25 @@ class IndexView(View):
                     'isbn': isbn,
                 }
                 book_data.append(query)
-                
+              
             page = result['page']       ## 現在のページ
             count = result['count']     ## 検索総数
             pageCount = result['pageCount']  ## 総ページ数
-            pstart = (page-1)*28+1
-            pend = (page*28)
-            for_range = [i for i in range(1,pageCount+1)]    
+            for_range = [i for i in range(1,pageCount+1)]   
+            endnowpage = pageCount - page 
+            count_one_s = (page-1) * 28 + 1 
+            count_one_e = count_one_s + len(items) -1 
+                     
             return render(request, 'app/book.html', {
                 'book_data': book_data,
                 'keyword': keyword,
                 'page': page,
                 'count': count,
                 'pageCount': pageCount,
-                'pstart': pstart,
-                'pend': pend,
                 'for_range':for_range,
+                'endnowpage':endnowpage,
+                'count_one_s':count_one_s,
+                'count_one_e':count_one_e,
             })
             
         return  render(request, 'app/index.html', {
@@ -138,19 +141,22 @@ class BooksView(View):
         page = result['page']       ## 現在のページ
         count = result['count']     ## 検索総数
         pageCount = result['pageCount']  ## 総ページ数
-        pstart = (page-1)*28+1
-        pend = (page*28)
         for_range = [i for i in range(1,pageCount+1)]
-
-            
+        endnowpage = pageCount - page
+        count_one_s = (page-1) * 28 + 1 
+        count_one_e = count_one_s + len(items) -1
+        print(f'差分:{endnowpage}')
+        print(f'page:{page}')    
         return render(request, 'app/book.html', {
             'book_data': book_data,
             'keyword': keyword,
             'page': page,
             'count': count,
             'pageCount': pageCount,
-            'pstart': pstart,
-            'pend': pend,
             'for_range':for_range,
+            'endnowpage':endnowpage,
+            'count_one_s': count_one_s,
+            'count_one_e': count_one_e,            
+            
         })
                         
